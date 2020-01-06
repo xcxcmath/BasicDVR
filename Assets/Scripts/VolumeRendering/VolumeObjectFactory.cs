@@ -6,7 +6,7 @@ using Object = UnityEngine.Object;
 
 public class VolumeObjectFactory
 {
-    public static VolumeRenderedObject CreateObject(VolumeDataset dataset, string tfFilePath = null, string tf2DFilePath = null)
+    public static VolumeRenderedObject CreateObject(VolumeDataset dataset, string tfFilePath, string tf2DFilePath, bool enable2D)
     {
         var obj = Object.Instantiate(Resources.Load("VolumeRenderedObject", typeof(GameObject))) as GameObject;
         
@@ -96,6 +96,11 @@ public class VolumeObjectFactory
             volObj.tf2DFilePath = tf2DFilePath;
         }
         volObj.transferFunction2D = tf2D;
+        if (enable2D)
+        {
+            tf2D.GenerateTexture();
+            tfTexture = tf2D.GetTexture();
+        }
         
         meshRenderer.sharedMaterial.SetTexture("_DataTex", tex);
         meshRenderer.sharedMaterial.SetTexture("_NoiseTex", noiseTexture);

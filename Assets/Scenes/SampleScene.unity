@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.3731193, g: 0.38073996, b: 0.35872698, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -141,15 +141,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5086ee8d5610d47ac9c172ecdf50ddc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sizeX: 256
-  sizeY: 256
-  sizeZ: 230
+  sizeX: 244
+  sizeY: 124
+  sizeZ: 257
   dataFormat: 2
   bytesToSkip: 6
-  rawData: {fileID: 102900000, guid: 011f231307a254f9bbe1711c893db77a, type: 3}
-  transferFunctionFile: {fileID: 102900000, guid: 2219786b42c4740c8a9db5955075466b,
+  rawData: {fileID: 102900000, guid: 1db8baae7111346749f3a7d1adf881ab, type: 3}
+  transferFunctionFile: {fileID: 0}
+  transferFunction2DFile: {fileID: 102900000, guid: ddf0451f3c6979446958744c60358cc4,
     type: 3}
-  transferFunction2DFile: {fileID: 0}
+  _DVRType: 1
+  renderAsScale: 1
 --- !u!4 &68155408
 Transform:
   m_ObjectHideFlags: 0
@@ -267,7 +269,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4858807375538342, guid: 3019d4eebe2593e428d7b9ccb096ceda, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.33
       objectReference: {fileID: 0}
     - target: {fileID: 4858807375538342, guid: 3019d4eebe2593e428d7b9ccb096ceda, type: 3}
       propertyPath: m_LocalRotation.x
@@ -309,7 +311,7 @@ PrefabInstance:
     - target: {fileID: 114865344359803568, guid: 3019d4eebe2593e428d7b9ccb096ceda,
         type: 3}
       propertyPath: size
-      value: 1.5
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 20959260662082832, guid: 3019d4eebe2593e428d7b9ccb096ceda,
         type: 3}
@@ -329,12 +331,12 @@ PrefabInstance:
     - target: {fileID: 20959260662082832, guid: 3019d4eebe2593e428d7b9ccb096ceda,
         type: 3}
       propertyPath: near clip plane
-      value: 9.966519
+      value: 3.322173
       objectReference: {fileID: 0}
     - target: {fileID: 20959260662082832, guid: 3019d4eebe2593e428d7b9ccb096ceda,
         type: 3}
       propertyPath: far clip plane
-      value: 18.216518
+      value: 6.072173
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3019d4eebe2593e428d7b9ccb096ceda, type: 3}

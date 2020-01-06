@@ -52,6 +52,7 @@ public class TransferFunction2DEditorWindow : EditorWindow
             if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && boxRect.Contains(new Vector2(Event.current.mousePosition.x, Event.current.mousePosition.y)))
             {
                 selectedBoxIndex = i;
+                needsRegenTexture = true;
             }
         }
 
@@ -90,6 +91,7 @@ public class TransferFunction2DEditorWindow : EditorWindow
             if (GUI.Button(new Rect(startX, startY + 150, 150.0f, 40.0f), "Remove selected shape"))
             {
                 tf2d.boxes.RemoveAt(selectedBoxIndex);
+                selectedBoxIndex = -1;
                 needsRegenTexture = true;
             }
         }
@@ -101,11 +103,16 @@ public class TransferFunction2DEditorWindow : EditorWindow
             needsRegenTexture = false;
         }
 
-        if (GUI.Button(new Rect(startX + 170, startY + 100, 150.0f, 40.0f), "Build into asset"))
+        if (GUI.Button(new Rect(startX + 170, startY + 100, 150.0f, 40.0f), "Build into file"))
         {
             TransferFunction2D.WriteToFile(tf2d, vol.tf2DFilePath);
         }
         vol.GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_TFTex", tf2d.GetTexture());
         vol.GetComponent<MeshRenderer>().sharedMaterial.EnableKeyword("TF2D_ON");
+    }
+
+    private void OnInspectorUpdate()
+    {
+        Repaint();
     }
 }
