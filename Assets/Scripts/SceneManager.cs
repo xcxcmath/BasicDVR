@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.VersionControl;
 using UnityEngine;
-
+using System.IO;
 public class SceneManager : MonoBehaviour
 {
     enum DVRType
@@ -22,8 +22,77 @@ public class SceneManager : MonoBehaviour
     [SerializeField] private Object transferFunction2DFile = null;
     [SerializeField] private DVRType _DVRType = DVRType.TF1D;
     [SerializeField] private bool renderAsScale = false;
-    private VolumeRenderedObject obj = null;
-    private Vector3 rotateAxis = new Vector3(0, 0, 1);
+    [HideInInspector] public VolumeRenderedObject obj = null;
+    [SerializeField] public RenderTexture pickRenderTexture = null;
+    private Object prevRawData = null;
+
+    // for experiments
+    [Tooltip("Visualization flag of blinking target")]
+    [SerializeField] private bool blinkTarget = false;
+    [Tooltip("UV-space coordinate that user should pick")]
+    [SerializeField] private Vector3 targetPos = Vector3.zero;
+
+    // for picking
+    private Texture2D pickTex;
+    private Rect pickRect;
+
+    private void OnEnable()
+    {
+        prevRawData = rawData;
+    }
+
+    private void OnValidate()
+    {
+        if ((prevRawData != null && prevRawData.Equals(rawData)) || rawData == null) return;
+        Debug.Log("raw data change detected");
+        prevRawData = rawData;
+
+        // parse obj file name
+        var filePath = AssetDatabase.GetAssetPath(rawData);
+        var fileName = Path.GetFileName(filePath);
+        var splitted = fileName.Split(new char[] { '.' });
+        for(int i = 1; i < splitted.Length; ++i)
+        {
+            var here = splitted[i];
+            if (here.StartsWith("skip"))
+            {
+                bytesToSkip = int.Parse(here.Substring(4));
+                continue;
+            }
+            var xSplitted = here.Split(new char[] { 'x' });
+            if(xSplitted.Length == 3)
+            {
+                sizeX = int.Parse(xSplitted[0]);
+                sizeY = int.Parse(xSplitted[1]);
+                sizeZ = int.Parse(xSplitted[2]);
+                continue;
+            }
+
+            switch (here)
+            {
+                case "i8":
+                    dataFormat = DataContentFormat.Int8;
+                    break;
+                case "i16":
+                    dataFormat = DataContentFormat.Int16;
+                    break;
+                case "i32":
+                    dataFormat = DataContentFormat.Int32;
+                    break;
+                case "u8":
+                    dataFormat = DataContentFormat.Uint8;
+                    break;
+                case "u16":
+                    dataFormat = DataContentFormat.Uint16;
+                    break;
+                case "u32":
+                    dataFormat = DataContentFormat.Uint32;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -73,18 +142,26 @@ public class SceneManager : MonoBehaviour
         {
             Debug.LogError("Failed to import dataset");
         }
+        pickTex = new Texture2D(1, 1);
+        pickRect = new Rect(0, 0,1,1);
     }
 
     void Update()
     {
-        transform.Rotate(rotateAxis, Time.deltaTime * 20.0f);
         obj.transform.position = transform.position;
         obj.transform.rotation = transform.rotation;
         obj.transform.localScale = transform.localScale;
-    }
+        obj.GetComponent<MeshRenderer>().sharedMaterial.SetInt("_BlinkTarget", blinkTarget ? 1 : 0);
+        obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_TargetPos", targetPos);
 
-    private void OnValidate()
-    {
-        
+        if(pickRenderTexture != null)
+        {
+            RenderTexture.active = pickRenderTexture;
+            pickTex.ReadPixels(pickRect, 0, 0);
+            pickTex.Apply();
+            RenderTexture.active = null;
+            var picked = pickTex.GetPixel(0, 0);
+            obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_PickingPos", picked);
+        }
     }
 }

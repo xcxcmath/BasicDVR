@@ -83,6 +83,7 @@ public class TransferFunction2DEditorWindow : EditorWindow
         if (GUI.Button(new Rect(startX, startY + 100, 150.0f, 40.0f), "Add rectangle"))
         {
             tf2d.AddBox(0.1f, 0.1f, 0.8f, 0.8f, Color.white, 0.5f, 0.5f);
+            selectedBoxIndex = tf2d.boxes.Count - 1;
             needsRegenTexture = true;
         }
         // Remove selected shape

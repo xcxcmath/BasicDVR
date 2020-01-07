@@ -7,6 +7,10 @@
         _TFTex ("Transfer Function Texture (Generated)", 2D) = "" {}
         _MinVal("Min val", Range(0.0, 1.0)) = 0.0
         _MaxVal("Max val", Range(0.0, 1.0)) = 1.0
+		_BlinkTarget("BlinkTarget", Int) = 0
+		_TargetPos("Target Position in UV space", Vector) = (0,0,0,0)
+		_PickingPos("Picking Position in UV space", Vector) = (0,0,0,0)
+		_IsPicking("is picking mode", Int) = 0
     }
     SubShader
     {
@@ -57,6 +61,10 @@
             sampler2D _TFTex;
             float _MinVal;
             float _MaxVal;
+			int _BlinkTarget;
+			float3 _TargetPos;
+			float3 _PickingPos;
+			int _IsPicking;
             
             float4 getTFColor(float density)
             {
@@ -122,7 +130,10 @@
                 float3 end = ray.origin + ray.dir * tfar;
                 
                 float4 dst = float4(0,0,0,0);
-                
+
+                float4 WYSIWYP = float4(0,0,0,0); // picked position: float3, alpha increment: float
+				int inc_start = 0; float4 inc_start_pos = float4(1,1,1,0);
+
                 [unroll]
                 for(int iter = 0; iter < ITERATIONS; ++iter){
                     float iter_point = float(iter) / float(ITERATIONS);
@@ -142,11 +153,40 @@
                         src.a = 0.0f;
                     src.a *= 0.5;
                     src.rgb *= src.a;
+
+					// blinking
+					float is_blink = _BlinkTarget * (1 - _IsPicking);
+					float near_target_term = step(length(uv - _TargetPos), 0.04);
+					float blink_term = step(sin(_Time * 100), 0);
+					src = lerp(src, float4(0.5, 0.75, 1, 1), is_blink * near_target_term * blink_term);
+					float near_pick_term = step(length(uv - _PickingPos.xyz), 0.04);
+					src = lerp(src, float4(1,0.75,0.5,1), is_blink * near_pick_term);
+
+					// accumulate
                     float alpha_delta = (1 - dst.a) * src.a;
                     dst += (1.0 - dst.a) * src;
+					if(_IsPicking == 1){
+						if(alpha_delta > 0.004 && inc_start==0){
+							inc_start = 1; inc_start_pos.xyz = uv; inc_start_pos.w = dst.a;
+						} else if(alpha_delta < 0.004 && inc_start == 1){
+							inc_start = 0; float delta = dst.a - inc_start_pos.w;
+							if(delta > WYSIWYP.w){
+								WYSIWYP.w = delta;
+								WYSIWYP.xyz = (inc_start_pos.xyz + uv) / 2;
+							}
+						}
+					}
                     if(dst.a > 1.0f)
                         break;
                 }
+				if(_IsPicking == 1){
+					if(inc_start==1){
+						float delta = dst.a - inc_start_pos.w;
+						if(delta > WYSIWYP.w) WYSIWYP.xyz = (inc_start_pos.xyz + get_uv(end)) / 2;
+					}
+					WYSIWYP.a = 1;
+					return WYSIWYP;
+				}
                 return saturate(dst);
             }
             
