@@ -79,7 +79,7 @@ Material:
     - _IsPicking: 0
     - _MaxVal: 1
     - _Metallic: 0
-    - _MinVal: 0.1
+    - _MinVal: 0.05
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02

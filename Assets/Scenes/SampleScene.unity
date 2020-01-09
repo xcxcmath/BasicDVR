@@ -141,14 +141,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5086ee8d5610d47ac9c172ecdf50ddc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sizeX: 244
-  sizeY: 124
-  sizeZ: 257
+  sizeX: 208
+  sizeY: 208
+  sizeZ: 123
   dataFormat: 2
-  bytesToSkip: 6
-  rawData: {fileID: 102900000, guid: 1db8baae7111346749f3a7d1adf881ab, type: 3}
+  bytesToSkip: 0
+  rawData: {fileID: 102900000, guid: 6fdf47a344b5a4c43ad47ba24ab63793, type: 3}
   transferFunctionFile: {fileID: 0}
-  transferFunction2DFile: {fileID: 102900000, guid: ddf0451f3c6979446958744c60358cc4,
+  transferFunction2DFile: {fileID: 102900000, guid: b4dc350c985b4ef45a2a305a8b16a2ec,
     type: 3}
   _DVRType: 1
   renderAsScale: 1
@@ -163,13 +163,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 68155406}
-  m_LocalRotation: {x: -0.6830127, y: -0.1830127, z: -0.1830127, w: 0.6830127}
+  m_LocalRotation: {x: 0.35355335, y: -0.61237246, z: -0.61237246, w: -0.35355335}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 270, y: 240, z: 90}
+  m_LocalEulerAnglesHint: {x: 270, y: 120, z: 0}
 --- !u!1 &534669902
 GameObject:
   m_ObjectHideFlags: 0
@@ -296,6 +296,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Holoplay Capture
       objectReference: {fileID: 0}
+    - target: {fileID: 1770150239514932, guid: 3019d4eebe2593e428d7b9ccb096ceda, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4858807375538342, guid: 3019d4eebe2593e428d7b9ccb096ceda, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -353,17 +357,17 @@ PrefabInstance:
     - target: {fileID: 114865344359803568, guid: 3019d4eebe2593e428d7b9ccb096ceda,
         type: 3}
       propertyPath: background.r
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114865344359803568, guid: 3019d4eebe2593e428d7b9ccb096ceda,
         type: 3}
       propertyPath: background.g
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114865344359803568, guid: 3019d4eebe2593e428d7b9ccb096ceda,
         type: 3}
       propertyPath: background.b
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114865344359803568, guid: 3019d4eebe2593e428d7b9ccb096ceda,
         type: 3}
@@ -408,17 +412,17 @@ PrefabInstance:
     - target: {fileID: 20959260662082832, guid: 3019d4eebe2593e428d7b9ccb096ceda,
         type: 3}
       propertyPath: m_BackGroundColor.r
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 20959260662082832, guid: 3019d4eebe2593e428d7b9ccb096ceda,
         type: 3}
       propertyPath: m_BackGroundColor.g
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 20959260662082832, guid: 3019d4eebe2593e428d7b9ccb096ceda,
         type: 3}
       propertyPath: m_BackGroundColor.b
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 20959260662082832, guid: 3019d4eebe2593e428d7b9ccb096ceda,
         type: 3}
@@ -453,7 +457,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1906073570}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: -2}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 4190213117834694}
@@ -573,7 +577,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1491371844564594}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.5}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4190213117834694}

@@ -158,6 +158,8 @@ public class TransferFunction
                 writer.Write(alp.dataValue);
                 writer.Write(alp.alphaValue);
             }
+
+            writer.Flush();
         }
     }
 }

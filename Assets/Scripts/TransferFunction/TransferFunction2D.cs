@@ -122,6 +122,8 @@ public class TransferFunction2D
                 writer.Write(box.rect.width);
                 writer.Write(box.rect.height);
             }
+
+            writer.Flush();
         }
     }
 }
