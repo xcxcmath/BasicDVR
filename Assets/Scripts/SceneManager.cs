@@ -31,10 +31,20 @@ public class SceneManager : MonoBehaviour
     [SerializeField] private bool blinkTarget = false;
     [Tooltip("UV-space coordinate that user should pick")]
     [SerializeField] private Vector3 targetPos = Vector3.zero;
+    [SerializeField] private float targetSize = 0.04f;
+    [SerializeField] private float pickSize = 0.06f;
+    [SerializeField] private float raySize = 0.005f;
+    [SerializeField] private Color targetColor = new Color(0.5f, 0.75f, 1.0f, 1.0f);
+    [SerializeField] private Color pickColor = new Color(1.0f, 0.9f, 0.7f, 1.0f);
+    [SerializeField] private Color rayColor = new Color(0.5f, 0.75f, 1.0f, 1.0f);
+    [SerializeField] private bool showRay = false;
 
     // for picking
     private Texture2D pickTex;
     private Rect pickRect;
+    private LookingGlass.Cursor3D cursor3D = null;
+    private Vector4 cur_origin = new Vector4(0, 0, 0, 1);
+    private Vector4 cur_dir = new Vector4(0, 0, 1, 0);
 
     private void OnEnable()
     {
@@ -144,6 +154,9 @@ public class SceneManager : MonoBehaviour
         }
         pickTex = new Texture2D(1, 1);
         pickRect = new Rect(0, 0,1,1);
+        cursor3D = FindObjectOfType<LookingGlass.Cursor3D>();
+
+        obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_PickingPos", Vector3.zero);
     }
 
     void Update()
@@ -153,8 +166,18 @@ public class SceneManager : MonoBehaviour
         obj.transform.localScale = transform.localScale;
         obj.GetComponent<MeshRenderer>().sharedMaterial.SetInt("_BlinkTarget", blinkTarget ? 1 : 0);
         obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_TargetPos", targetPos);
+        obj.GetComponent<MeshRenderer>().sharedMaterial.SetFloat("_TargetSize", targetSize);
+        obj.GetComponent<MeshRenderer>().sharedMaterial.SetFloat("_PickSize", pickSize);
+        obj.GetComponent<MeshRenderer>().sharedMaterial.SetFloat("_RaySize", raySize);
+        obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_TargetColor", targetColor);
+        obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_PickColor", pickColor);
+        obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_RayColor", rayColor);
+        obj.GetComponent<MeshRenderer>().sharedMaterial.SetInt("_ShowRay", showRay ? 1 : 0);
+        var pickToObj = transform.worldToLocalMatrix * cursor3D.transform.localToWorldMatrix;
+        obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_PickRayOrigin", pickToObj * cur_origin);
+        obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_PickRayDir", pickToObj * cur_dir);
 
-        if(pickRenderTexture != null)
+        if(pickRenderTexture != null && Input.GetMouseButtonDown(0))
         {
             RenderTexture.active = pickRenderTexture;
             pickTex.ReadPixels(pickRect, 0, 0);
@@ -162,6 +185,7 @@ public class SceneManager : MonoBehaviour
             RenderTexture.active = null;
             var picked = pickTex.GetPixel(0, 0);
             obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_PickingPos", picked);
+            Debug.Log(Time.time.ToString() + " " + picked.ToString());
         }
     }
 }

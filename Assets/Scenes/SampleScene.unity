@@ -141,14 +141,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5086ee8d5610d47ac9c172ecdf50ddc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sizeX: 208
-  sizeY: 208
-  sizeZ: 123
+  sizeX: 244
+  sizeY: 124
+  sizeZ: 257
   dataFormat: 2
-  bytesToSkip: 0
-  rawData: {fileID: 102900000, guid: 6fdf47a344b5a4c43ad47ba24ab63793, type: 3}
+  bytesToSkip: 6
+  rawData: {fileID: 102900000, guid: 1db8baae7111346749f3a7d1adf881ab, type: 3}
   transferFunctionFile: {fileID: 0}
-  transferFunction2DFile: {fileID: 102900000, guid: b4dc350c985b4ef45a2a305a8b16a2ec,
+  transferFunction2DFile: {fileID: 102900000, guid: ddf0451f3c6979446958744c60358cc4,
     type: 3}
   _DVRType: 1
   renderAsScale: 1
@@ -156,6 +156,13 @@ MonoBehaviour:
   pickRenderTexture: {fileID: 8400000, guid: bd99d30e88679e048b76b4f1ec65b153, type: 2}
   blinkTarget: 1
   targetPos: {x: 0.5, y: 0.5, z: 0.5}
+  targetSize: 0.04
+  pickSize: 0.04
+  raySize: 0.005
+  targetColor: {r: 0.49803922, g: 0.7490196, b: 1, a: 1}
+  pickColor: {r: 1, g: 0.8980392, b: 0.69803923, a: 1}
+  rayColor: {r: 0.5, g: 0.75, b: 1, a: 1}
+  showRay: 1
 --- !u!4 &68155408
 Transform:
   m_ObjectHideFlags: 0
@@ -163,13 +170,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 68155406}
-  m_LocalRotation: {x: 0.35355335, y: -0.61237246, z: -0.61237246, w: -0.35355335}
+  m_LocalRotation: {x: 0.66446304, y: 0.24184473, z: 0.24184473, w: -0.66446304}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 270, y: 120, z: 0}
+  m_LocalEulerAnglesHint: {x: 270, y: -40, z: 0}
 --- !u!1 &534669902
 GameObject:
   m_ObjectHideFlags: 0
@@ -298,7 +305,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1770150239514932, guid: 3019d4eebe2593e428d7b9ccb096ceda, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4858807375538342, guid: 3019d4eebe2593e428d7b9ccb096ceda, type: 3}
       propertyPath: m_LocalPosition.x
@@ -352,7 +359,7 @@ PrefabInstance:
     - target: {fileID: 114865344359803568, guid: 3019d4eebe2593e428d7b9ccb096ceda,
         type: 3}
       propertyPath: size
-      value: 0.5
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 114865344359803568, guid: 3019d4eebe2593e428d7b9ccb096ceda,
         type: 3}
@@ -384,6 +391,26 @@ PrefabInstance:
       propertyPath: viewconeModifier
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114865344359803568, guid: 3019d4eebe2593e428d7b9ccb096ceda,
+        type: 3}
+      propertyPath: viewInterpolation
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114865344359803568, guid: 3019d4eebe2593e428d7b9ccb096ceda,
+        type: 3}
+      propertyPath: reduceFlicker
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114865344359803568, guid: 3019d4eebe2593e428d7b9ccb096ceda,
+        type: 3}
+      propertyPath: blendViews
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114865344359803568, guid: 3019d4eebe2593e428d7b9ccb096ceda,
+        type: 3}
+      propertyPath: farClipFactor
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 20959260662082832, guid: 3019d4eebe2593e428d7b9ccb096ceda,
         type: 3}
       propertyPath: m_projectionMatrixMode
@@ -402,12 +429,12 @@ PrefabInstance:
     - target: {fileID: 20959260662082832, guid: 3019d4eebe2593e428d7b9ccb096ceda,
         type: 3}
       propertyPath: near clip plane
-      value: 3.322173
+      value: 4.651042
       objectReference: {fileID: 0}
     - target: {fileID: 20959260662082832, guid: 3019d4eebe2593e428d7b9ccb096ceda,
         type: 3}
       propertyPath: far clip plane
-      value: 6.072173
+      value: 8.501042
       objectReference: {fileID: 0}
     - target: {fileID: 20959260662082832, guid: 3019d4eebe2593e428d7b9ccb096ceda,
         type: 3}

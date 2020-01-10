@@ -10,7 +10,16 @@
 		_BlinkTarget("BlinkTarget", Int) = 0
 		_TargetPos("Target Position in UV space", Vector) = (0,0,0,0)
 		_PickingPos("Picking Position in UV space", Vector) = (0,0,0,0)
+        _TargetSize("Target point size", Float) = 0
+        _PickSize("Pick point size", Float) = 0
+        _RaySize("Ray size", Float) = 0
+        _TargetColor("Target point color", Vector) = (0,0,0,0)
+        _PickColor("Pick point color", Vector) = (0,0,0,0)
+        _RayColor("Ray color", Vector) = (0,0,0,0)
 		_IsPicking("is picking mode", Int) = 0
+        _ShowRay("Show the picking ray", Int) = 0
+        _PickRayOrigin("Origin of cursor in Object space", Vector) = (0,0,0,0)
+        _PickRayDir("Direction of cursor in Object space", Vector) = (0,0,0,0)
     }
     SubShader
     {
@@ -64,7 +73,16 @@
 			int _BlinkTarget;
 			float3 _TargetPos;
 			float3 _PickingPos;
+            float _TargetSize;
+            float _PickSize;
+            float _RaySize;
+            float4 _TargetColor;
+            float4 _PickColor;
+            float4 _RayColor;
 			int _IsPicking;
+            int _ShowRay;
+            float3 _PickRayOrigin;
+            float3 _PickRayDir;
             
             float4 getTFColor(float density)
             {
@@ -111,7 +129,7 @@
             
             fixed4 frag(v2f i) : SV_Target
             {
-                Ray ray;
+                Ray ray, pickray;
                 ray.origin = i.local;
                 
                 float3 dir = (i.world - _WorldSpaceCameraPos);
@@ -120,6 +138,9 @@
                 // create random offset
                 ray.origin += (2.0f * ray.dir / ITERATIONS) * tex2D(_NoiseTex, i.uv);
                 
+                pickray.origin = _PickRayOrigin;
+                pickray.dir = _PickRayDir;
+
                 AABB aabb; aabb.min = float3(-0.5, -0.5, -0.5); aabb.max = float3(0.5, 0.5, 0.5);
                 
                 float tnear, tfar;
@@ -154,13 +175,19 @@
                     src.a *= 0.5;
                     src.rgb *= src.a;
 
-					// blinking
+					// blinking pick(target) position
 					float is_blink = _BlinkTarget * (1 - _IsPicking);
-					float near_target_term = step(length(uv - _TargetPos), 0.04);
+					float near_target_term = step(length(uv - _TargetPos), _TargetSize);
 					float blink_term = step(sin(_Time * 100), 0);
-					src = lerp(src, float4(0.5, 0.75, 1, 1), is_blink * near_target_term * blink_term);
-					float near_pick_term = step(length(uv - _PickingPos.xyz), 0.04);
-					src = lerp(src, float4(1,0.75,0.5,1), is_blink * near_pick_term);
+					src = lerp(src, _TargetColor, is_blink * near_target_term * blink_term);
+					float near_pick_term = step(length(uv - _PickingPos.xyz), _PickSize);
+					src = lerp(src, _PickColor, is_blink * near_pick_term);
+
+                    // show ray
+                    float is_show_ray = _ShowRay * (1 - _IsPicking);
+                    float near_ray_term = step(length(cross(obj_pos - pickray.origin, pickray.dir)), _RaySize);
+                    float ray_color_term = sin(iter_point * 2 + _Time * 60) / 3 + 0.5;
+                    src = lerp(src, _RayColor * ray_color_term, is_show_ray * near_ray_term);
 
 					// accumulate
                     float alpha_delta = (1 - dst.a) * src.a;
