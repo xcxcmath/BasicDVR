@@ -12,6 +12,21 @@ public class SceneManager : MonoBehaviour
         TF2D
     }
 
+    struct PickPoint
+    {
+        float time;
+        Color point;
+        public PickPoint(float time, Color point)
+        {
+            this.time = time;
+            this.point = point;
+        }
+        override public string ToString()
+        {
+            return $"{time.ToString()} {point.r} {point.g} {point.b}";
+        }
+    }
+
     [SerializeField] private int sizeX = 256;
     [SerializeField] private int sizeY = 256;
     [SerializeField] private int sizeZ = 256;
@@ -23,7 +38,6 @@ public class SceneManager : MonoBehaviour
     [SerializeField] private DVRType _DVRType = DVRType.TF1D;
     [SerializeField] private bool renderAsScale = false;
     [HideInInspector] public VolumeRenderedObject obj = null;
-    [SerializeField] public RenderTexture pickRenderTexture = null;
     private Object prevRawData = null;
 
     // for experiments
@@ -38,13 +52,19 @@ public class SceneManager : MonoBehaviour
     [SerializeField] private Color pickColor = new Color(1.0f, 0.9f, 0.7f, 1.0f);
     [SerializeField] private Color rayColor = new Color(0.5f, 0.75f, 1.0f, 1.0f);
     [SerializeField] private bool showRay = false;
+    [SerializeField] private string resultPath = "Assets/Results/result.txt";
+    private List<PickPoint> pickPoints = null;
 
     // for picking
-    private Texture2D pickTex;
-    private Rect pickRect;
+    [SerializeField] private RenderTexture pickRenderTexture = null;
+    private RenderTexture pickRenderTexture2D = null;
+    private Texture2D pickTex = null, pickTex2D = null;
+    private Rect pickRect, pickRect2D;
     private LookingGlass.Cursor3D cursor3D = null;
     private Vector4 cur_origin = new Vector4(0, 0, 0, 1);
     private Vector4 cur_dir = new Vector4(0, 0, 1, 0);
+    [SerializeField] private GameObject cursor2D = null;
+    [SerializeField] private bool is2DPicking = false;
 
     private void OnEnable()
     {
@@ -152,11 +172,21 @@ public class SceneManager : MonoBehaviour
         {
             Debug.LogError("Failed to import dataset");
         }
+        if(cursor2D != null)
+        {
+            pickRenderTexture2D = new RenderTexture(Camera.main.pixelWidth, Camera.main.pixelHeight, 16, RenderTextureFormat.ARGB32);
+            cursor2D.GetComponent<Camera>().targetTexture = pickRenderTexture2D;
+            pickTex2D = new Texture2D(Camera.main.pixelWidth, Camera.main.pixelHeight);
+            pickRect2D = new Rect(0, 0, Camera.main.pixelWidth, Camera.main.pixelHeight);
+        }
         pickTex = new Texture2D(1, 1);
-        pickRect = new Rect(0, 0,1,1);
+        pickRect = new Rect(0, 0, 1, 1);
+
         cursor3D = FindObjectOfType<LookingGlass.Cursor3D>();
 
         obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_PickingPos", Vector3.zero);
+
+        pickPoints = new List<PickPoint>();
     }
 
     void Update()
@@ -173,19 +203,54 @@ public class SceneManager : MonoBehaviour
         obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_PickColor", pickColor);
         obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_RayColor", rayColor);
         obj.GetComponent<MeshRenderer>().sharedMaterial.SetInt("_ShowRay", showRay ? 1 : 0);
-        var pickToObj = transform.worldToLocalMatrix * cursor3D.transform.localToWorldMatrix;
-        obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_PickRayOrigin", pickToObj * cur_origin);
-        obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_PickRayDir", pickToObj * cur_dir);
-
-        if(pickRenderTexture != null && Input.GetMouseButtonDown(0))
+        if (cursor3D != null)
         {
-            RenderTexture.active = pickRenderTexture;
-            pickTex.ReadPixels(pickRect, 0, 0);
-            pickTex.Apply();
-            RenderTexture.active = null;
-            var picked = pickTex.GetPixel(0, 0);
-            obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_PickingPos", picked);
-            Debug.Log(Time.time.ToString() + " " + picked.ToString());
+            var pickToObj = transform.worldToLocalMatrix * cursor3D.transform.localToWorldMatrix;
+            obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_PickRayOrigin", pickToObj * cur_origin);
+            obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_PickRayDir", pickToObj * cur_dir);
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            if(pickRenderTexture != null && !is2DPicking)
+            {
+                RenderTexture.active = pickRenderTexture;
+                pickTex.ReadPixels(pickRect, 0, 0);
+                pickTex.Apply();
+                RenderTexture.active = null;
+                var picked = pickTex.GetPixel(0, 0);
+                obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_PickingPos", picked);
+                var pp = new PickPoint(Time.time, picked);
+                pickPoints.Add(pp);
+                Debug.Log(pp.ToString());
+            }
+            else if (is2DPicking)
+            {
+                RenderTexture.active = pickRenderTexture2D;
+                pickTex2D.ReadPixels(pickRect2D, 0, 0);
+                pickTex2D.Apply();
+                RenderTexture.active = null;
+                var mousePos = Input.mousePosition;
+                var picked = pickTex2D.GetPixel((int)mousePos.x, (int)mousePos.y);
+                obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_PickingPos", picked);
+                var pp = new PickPoint(Time.time, picked);
+                pickPoints.Add(pp);
+                Debug.Log(pp.ToString());
+
+            }
+        }
+    }
+    private void OnApplicationQuit()
+    {
+        using(var sw = new StreamWriter(File.Open(resultPath, System.IO.FileMode.Create, FileAccess.Write, FileShare.ReadWrite)))
+        {
+            sw.WriteLine(pickPoints.Count.ToString());
+            foreach(var pp in pickPoints)
+            {
+                sw.WriteLine(pp.ToString());
+            }
+            sw.Flush();
+            Debug.Log($"Results are stored in {resultPath}");
         }
     }
 }
