@@ -54,6 +54,9 @@ public class SceneManager : MonoBehaviour
     [SerializeField] private bool showRay = false;
     [SerializeField] private string resultPath = "Assets/Results/result.txt";
     private List<PickPoint> pickPoints = null;
+    private float startTime = 0.0f;
+    private bool isStartMoving = false;
+    
 
     // for picking
     [SerializeField] private RenderTexture pickRenderTexture = null;
@@ -187,6 +190,12 @@ public class SceneManager : MonoBehaviour
         obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_PickingPos", Vector3.zero);
 
         pickPoints = new List<PickPoint>();
+
+        if (is2DPicking)
+        {
+            cursor3D.enabled = false;
+            cursor3D.transform.position = new Vector3(-3, -3, 0);
+        }
     }
 
     void Update()
@@ -212,7 +221,12 @@ public class SceneManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            if(pickRenderTexture != null && !is2DPicking)
+            if (!isStartMoving)
+            {
+                isStartMoving = true;
+                startTime = Time.time;
+            }
+            else if(pickRenderTexture != null && !is2DPicking)
             {
                 RenderTexture.active = pickRenderTexture;
                 pickTex.ReadPixels(pickRect, 0, 0);
@@ -245,6 +259,7 @@ public class SceneManager : MonoBehaviour
         using(var sw = new StreamWriter(File.Open(resultPath, System.IO.FileMode.Create, FileAccess.Write, FileShare.ReadWrite)))
         {
             sw.WriteLine(pickPoints.Count.ToString());
+            sw.WriteLine(startTime);
             foreach(var pp in pickPoints)
             {
                 sw.WriteLine(pp.ToString());
