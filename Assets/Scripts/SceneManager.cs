@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.VersionControl;
 using UnityEngine;
@@ -16,14 +17,16 @@ public class SceneManager : MonoBehaviour
     {
         float time;
         Color point;
-        public PickPoint(float time, Color point)
+        string message;
+        public PickPoint(float time, Color point, string message)
         {
             this.time = time;
             this.point = point;
+            this.message = message;
         }
         override public string ToString()
         {
-            return $"{time.ToString()} {point.r} {point.g} {point.b}";
+            return $"{time.ToString()} {point.r} {point.g} {point.b} {message}";
         }
     }
 
@@ -41,10 +44,14 @@ public class SceneManager : MonoBehaviour
     private Object prevRawData = null;
 
     // for experiments
+    [SerializeField] private Object targetData = null;
+    [SerializeField] private float targetEpsilon = 0.02f;
+    private List<Color> targetPositions = null;
+    private int targetIndex = -1;
+    private string targetIndexMessage = "Ready";
+    [SerializeField] private GameObject targetMessageObject = null;
     [Tooltip("Visualization flag of blinking target")]
     [SerializeField] private bool blinkTarget = false;
-    [Tooltip("UV-space coordinate that user should pick")]
-    [SerializeField] private Vector3 targetPos = Vector3.zero;
     [SerializeField] private float targetSize = 0.04f;
     [SerializeField] private float pickSize = 0.06f;
     [SerializeField] private float raySize = 0.005f;
@@ -196,15 +203,95 @@ public class SceneManager : MonoBehaviour
             cursor3D.enabled = false;
             cursor3D.transform.position = new Vector3(-3, -3, 0);
         }
+
+        // experiment settings (targets)
+        if(targetData != null)
+        {
+            targetIndex = -1;
+            targetPositions = new List<Color>();
+            var targetDataFilePath = AssetDatabase.GetAssetPath(targetData);
+            using(var sr = new StreamReader(File.Open(targetDataFilePath, System.IO.FileMode.Open)))
+            {
+                int targetCount = int.Parse(sr.ReadLine());
+                for(var i = 0; i < targetCount; ++i)
+                {
+                    var lineList = sr.ReadLine().Trim().Split(' ').ToList().ConvertAll(float.Parse);
+                    if(lineList.Count == 3)
+                    {
+                        targetPositions.Add(new Color(lineList[0], lineList[1], lineList[2], 1.0f));
+                    }
+                }
+            }
+        }
     }
 
     void Update()
     {
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (!isStartMoving)
+            {
+                isStartMoving = true;
+                startTime = Time.time;
+                targetIndex = 0;
+                targetIndexMessage = "1";
+            }
+            else
+            {
+                Color picked = new Color(0, 0, 0);
+                if (is2DPicking)
+                {
+                    RenderTexture.active = pickRenderTexture2D;
+                    pickTex2D.ReadPixels(pickRect2D, 0, 0);
+                    pickTex2D.Apply();
+                    RenderTexture.active = null;
+                    var mousePos = Input.mousePosition;
+                    picked = pickTex2D.GetPixel((int)mousePos.x, (int)mousePos.y);
+                }
+                else
+                {
+                    RenderTexture.active = pickRenderTexture;
+                    pickTex.ReadPixels(pickRect, 0, 0);
+                    pickTex.Apply();
+                    RenderTexture.active = null;
+                    picked = pickTex.GetPixel(0, 0);
+                }
+                obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_PickingPos", picked);
+
+                // do experiments
+                string message = "";
+                if (targetPositions != null && targetIndex >= 0 && targetIndex < targetPositions.Count)
+                {
+                    var ct = targetPositions[targetIndex];
+                    var vp = new Vector3(picked.r, picked.g, picked.b);
+                    var vt = new Vector3(ct.r, ct.g, ct.b);
+                    if ((vp - vt).magnitude < targetEpsilon)
+                    {
+                        message = $"{targetIndex}";
+                        targetIndex += 1;
+                        targetIndexMessage = (targetIndex + 1).ToString();
+                        if (targetIndex == targetPositions.Count)
+                        {
+                            targetIndexMessage = "Finished";
+                        }
+                    }
+                }
+
+                var pp = new PickPoint(Time.time, picked, message);
+                pickPoints.Add(pp);
+                Debug.Log(pp.ToString());
+            }
+        }
+        targetMessageObject.GetComponent<TextMesh>().text = targetIndexMessage;
+
         obj.transform.position = transform.position;
         obj.transform.rotation = transform.rotation;
         obj.transform.localScale = transform.localScale;
         obj.GetComponent<MeshRenderer>().sharedMaterial.SetInt("_BlinkTarget", blinkTarget ? 1 : 0);
-        obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_TargetPos", targetPos);
+        if (targetPositions != null && targetIndex >= 0 && targetIndex < targetPositions.Count)
+        {
+            obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_TargetPos", targetPositions[targetIndex]);
+        }
         obj.GetComponent<MeshRenderer>().sharedMaterial.SetFloat("_TargetSize", targetSize);
         obj.GetComponent<MeshRenderer>().sharedMaterial.SetFloat("_PickSize", pickSize);
         obj.GetComponent<MeshRenderer>().sharedMaterial.SetFloat("_RaySize", raySize);
@@ -217,41 +304,6 @@ public class SceneManager : MonoBehaviour
             var pickToObj = transform.worldToLocalMatrix * cursor3D.transform.localToWorldMatrix;
             obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_PickRayOrigin", pickToObj * cur_origin);
             obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_PickRayDir", pickToObj * cur_dir);
-        }
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (!isStartMoving)
-            {
-                isStartMoving = true;
-                startTime = Time.time;
-            }
-            else if(pickRenderTexture != null && !is2DPicking)
-            {
-                RenderTexture.active = pickRenderTexture;
-                pickTex.ReadPixels(pickRect, 0, 0);
-                pickTex.Apply();
-                RenderTexture.active = null;
-                var picked = pickTex.GetPixel(0, 0);
-                obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_PickingPos", picked);
-                var pp = new PickPoint(Time.time, picked);
-                pickPoints.Add(pp);
-                Debug.Log(pp.ToString());
-            }
-            else if (is2DPicking)
-            {
-                RenderTexture.active = pickRenderTexture2D;
-                pickTex2D.ReadPixels(pickRect2D, 0, 0);
-                pickTex2D.Apply();
-                RenderTexture.active = null;
-                var mousePos = Input.mousePosition;
-                var picked = pickTex2D.GetPixel((int)mousePos.x, (int)mousePos.y);
-                obj.GetComponent<MeshRenderer>().sharedMaterial.SetVector("_PickingPos", picked);
-                var pp = new PickPoint(Time.time, picked);
-                pickPoints.Add(pp);
-                Debug.Log(pp.ToString());
-
-            }
         }
     }
     private void OnApplicationQuit()
