@@ -143,31 +143,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sizeX: 256
   sizeY: 256
-  sizeZ: 256
-  dataFormat: 1
-  bytesToSkip: 0
-  rawData: {fileID: 102900000, guid: 92aa5257c3b994905b03aeb4a357fe08, type: 3}
-  transferFunctionFile: {fileID: 102900000, guid: c1456a13594b6034d89f974d6299f7e3,
+  sizeZ: 230
+  dataFormat: 2
+  bytesToSkip: 6
+  rawData: {fileID: 102900000, guid: 011f231307a254f9bbe1711c893db77a, type: 3}
+  transferFunctionFile: {fileID: 0}
+  transferFunction2DFile: {fileID: 102900000, guid: bc5d21c129c519e4ab6aad320e4a93d1,
     type: 3}
-  transferFunction2DFile: {fileID: 0}
-  _DVRType: 0
+  _DVRType: 1
   renderAsScale: 1
   obj: {fileID: 0}
-  targetData: {fileID: 4900000, guid: 0f1050a6167ce7843b175a275268fa59, type: 3}
+  targetData: {fileID: 4900000, guid: 37a1aa284dce0154db9a41e993cccf21, type: 3}
   targetEpsilon: 0.05
   targetMessageObject: {fileID: 428902424}
   blinkTarget: 1
   targetSize: 0.04
   pickSize: 0.04
   raySize: 0.002
-  targetColor: {r: 0.49803922, g: 0.7490196, b: 1, a: 1}
+  targetColor: {r: 1, g: 0.5019608, b: 0.93725497, a: 1}
   pickColor: {r: 1, g: 0.8980392, b: 0.69803923, a: 1}
-  rayColor: {r: 0.5, g: 0.75, b: 1, a: 1}
+  rayColor: {r: 1, g: 0.5019608, b: 0.9379427, a: 1}
   showRay: 1
-  resultPath: Assets/Results/result.txt
+  resultPath: Assets/Results/result8.txt
   pickRenderTexture: {fileID: 8400000, guid: bd99d30e88679e048b76b4f1ec65b153, type: 2}
   cursor2D: {fileID: 127409086}
-  is2DPicking: 1
+  is2DPicking: 0
 --- !u!4 &68155408
 Transform:
   m_ObjectHideFlags: 0
@@ -175,13 +175,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 68155406}
-  m_LocalRotation: {x: -0.07898997, y: -0.42101005, z: -0.03683362, w: 0.90285903}
+  m_LocalRotation: {x: 0.66446304, y: 0.24184473, z: 0.24184473, w: -0.66446304}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -10, y: -50, z: 0}
+  m_LocalEulerAnglesHint: {x: 270, y: -40, z: 0}
 --- !u!1 &127409086
 GameObject:
   m_ObjectHideFlags: 0

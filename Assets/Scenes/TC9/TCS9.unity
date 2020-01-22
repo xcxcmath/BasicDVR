@@ -141,19 +141,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5086ee8d5610d47ac9c172ecdf50ddc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sizeX: 256
-  sizeY: 256
-  sizeZ: 256
-  dataFormat: 1
+  sizeX: 208
+  sizeY: 208
+  sizeZ: 123
+  dataFormat: 2
   bytesToSkip: 0
-  rawData: {fileID: 102900000, guid: 92aa5257c3b994905b03aeb4a357fe08, type: 3}
-  transferFunctionFile: {fileID: 102900000, guid: c1456a13594b6034d89f974d6299f7e3,
+  rawData: {fileID: 102900000, guid: 6fdf47a344b5a4c43ad47ba24ab63793, type: 3}
+  transferFunctionFile: {fileID: 0}
+  transferFunction2DFile: {fileID: 102900000, guid: b4dc350c985b4ef45a2a305a8b16a2ec,
     type: 3}
-  transferFunction2DFile: {fileID: 0}
-  _DVRType: 0
+  _DVRType: 1
   renderAsScale: 1
   obj: {fileID: 0}
-  targetData: {fileID: 4900000, guid: 0f1050a6167ce7843b175a275268fa59, type: 3}
+  targetData: {fileID: 4900000, guid: 171d1eb604b98ee47bee37bd589a07a6, type: 3}
   targetEpsilon: 0.05
   targetMessageObject: {fileID: 428902424}
   blinkTarget: 1
@@ -164,7 +164,7 @@ MonoBehaviour:
   pickColor: {r: 1, g: 0.8980392, b: 0.69803923, a: 1}
   rayColor: {r: 0.5, g: 0.75, b: 1, a: 1}
   showRay: 1
-  resultPath: Assets/Results/result.txt
+  resultPath: Assets/Results/result9.txt
   pickRenderTexture: {fileID: 8400000, guid: bd99d30e88679e048b76b4f1ec65b153, type: 2}
   cursor2D: {fileID: 127409086}
   is2DPicking: 1
@@ -175,13 +175,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 68155406}
-  m_LocalRotation: {x: -0.07898997, y: -0.42101005, z: -0.03683362, w: 0.90285903}
+  m_LocalRotation: {x: -0.08418634, y: -0.8613323, z: 0.4774443, w: -0.15187618}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -10, y: -50, z: 0}
+  m_LocalEulerAnglesHint: {x: 122, y: -20, z: 180}
 --- !u!1 &127409086
 GameObject:
   m_ObjectHideFlags: 0

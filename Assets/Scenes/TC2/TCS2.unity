@@ -141,30 +141,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5086ee8d5610d47ac9c172ecdf50ddc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sizeX: 244
-  sizeY: 124
-  sizeZ: 257
+  sizeX: 256
+  sizeY: 256
+  sizeZ: 230
   dataFormat: 2
   bytesToSkip: 6
-  rawData: {fileID: 102900000, guid: 1db8baae7111346749f3a7d1adf881ab, type: 3}
+  rawData: {fileID: 102900000, guid: 011f231307a254f9bbe1711c893db77a, type: 3}
   transferFunctionFile: {fileID: 0}
-  transferFunction2DFile: {fileID: 102900000, guid: ddf0451f3c6979446958744c60358cc4,
+  transferFunction2DFile: {fileID: 102900000, guid: bc5d21c129c519e4ab6aad320e4a93d1,
     type: 3}
   _DVRType: 1
   renderAsScale: 1
   obj: {fileID: 0}
-  targetData: {fileID: 4900000, guid: 0f1050a6167ce7843b175a275268fa59, type: 3}
-  targetEpsilon: 0.06
+  targetData: {fileID: 4900000, guid: 43bc0b8c8a7ac0444996a1d0dbda27d4, type: 3}
+  targetEpsilon: 0.05
   targetMessageObject: {fileID: 428902424}
   blinkTarget: 1
   targetSize: 0.04
   pickSize: 0.04
-  raySize: 0.003
-  targetColor: {r: 0.49803922, g: 0.7490196, b: 1, a: 1}
+  raySize: 0.002
+  targetColor: {r: 1, g: 0.5019608, b: 0.93725497, a: 1}
   pickColor: {r: 1, g: 0.8980392, b: 0.69803923, a: 1}
-  rayColor: {r: 0.5, g: 0.75, b: 1, a: 1}
-  showRay: 1
-  resultPath: Assets/Results/result.txt
+  rayColor: {r: 1, g: 0.5019608, b: 0.9372549, a: 1}
+  showRay: 0
+  resultPath: Assets/Results/result2.txt
   pickRenderTexture: {fileID: 8400000, guid: bd99d30e88679e048b76b4f1ec65b153, type: 2}
   cursor2D: {fileID: 127409086}
   is2DPicking: 0
@@ -394,7 +394,7 @@ TextMesh:
   m_Anchor: 2
   m_Alignment: 2
   m_TabSize: 4
-  m_FontSize: 20
+  m_FontSize: 100
   m_FontStyle: 0
   m_RichText: 1
   m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
@@ -447,7 +447,7 @@ Transform:
   m_GameObject: {fileID: 428902424}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.012, y: 0.642, z: -0.33}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 1}
+  m_LocalScale: {x: 0.02, y: 0.02, z: 0.02}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5

@@ -176,22 +176,23 @@
                     src.rgb *= src.a;
 
 					// blinking pick(target) position
-					float is_blink = _BlinkTarget * (1 - _IsPicking);
+                    float is_blink = mad(-_BlinkTarget, _IsPicking, _BlinkTarget); // _BlinkTarget* (1 - _IsPicking)
 					float near_target_term = step(length(uv - _TargetPos), _TargetSize);
-					float blink_term = step(sin(_Time * 100), 0);
+					float blink_term = step(sin(_Time * 300), 0);
 					src = lerp(src, _TargetColor, is_blink * near_target_term * blink_term);
 					float near_pick_term = step(length(uv - _PickingPos.xyz), _PickSize);
 					src = lerp(src, _PickColor, is_blink * near_pick_term);
 
                     // show ray
-                    float is_show_ray = _ShowRay * (1 - _IsPicking);
+                    float is_show_ray = mad(-_ShowRay, _IsPicking, _ShowRay); // _ShowRay* (1 - _IsPicking)
                     float near_ray_term = step(length(cross(obj_pos - pickray.origin, pickray.dir)), _RaySize);
-                    float ray_color_term = sin(iter_point * 2 + _Time * 60) / 3 + 0.5;
+                    float ray_color_term = mad(sin(mad(30, _Time, iter_point) * 2), 0.333, 0.5);
+                    //float ray_color_term = sin(iter_point * 2 + _Time * 60) / 3 + 0.5;
                     src = lerp(src, _RayColor * ray_color_term, is_show_ray * near_ray_term);
 
 					// accumulate
-                    float alpha_delta = (1 - dst.a) * src.a;
-                    dst += (1.0 - dst.a) * src;
+                    float alpha_delta = mad(-src.a, dst.a, src.a); // (1 - dst.a)* src.a
+                    dst += (-dst.a * src + src); //(1.0 - dst.a) * src
 					if(_IsPicking == 1){
 						if(alpha_delta > 0.004 && inc_start==0){
 							inc_start = 1; inc_start_pos.xyz = uv; inc_start_pos.w = dst.a;

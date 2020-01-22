@@ -84,8 +84,8 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _PickSize: 0.04
-    - _RaySize: 0.003
-    - _ShowRay: 1
+    - _RaySize: 0.002
+    - _ShowRay: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -98,9 +98,9 @@ Material:
     - _CursorPos: {r: -1.4312501, g: 0.46625, b: -0.3499999, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _PickColor: {r: 1, g: 0.8980392, b: 0.69803923, a: 1}
-    - _PickRayDir: {r: 0.1376303, g: -0.31376144, b: 0.0027882732, a: 0}
-    - _PickRayOrigin: {r: -1.7634416, g: -2.018838, b: 0.6172375, a: 1}
-    - _PickingPos: {r: 0.5568628, g: 0.6784314, b: 0.4745098, a: 1}
+    - _PickRayDir: {r: 0.13243623, g: -0.31794888, b: 0.025620194, a: 0}
+    - _PickRayOrigin: {r: -0.1428081, g: 0.8892506, b: 0.7532113, a: 1}
+    - _PickingPos: {r: 0.5686275, g: 0.7647059, b: 0.4862745, a: 1}
     - _RayColor: {r: 0.5, g: 0.75, b: 1, a: 1}
-    - _TargetColor: {r: 0.49803922, g: 0.7490196, b: 1, a: 1}
-    - _TargetPos: {r: 0.552, g: 0.696, b: 0.478, a: 1}
+    - _TargetColor: {r: 0, g: 0.5, b: 1, a: 1}
+    - _TargetPos: {r: 0.557, g: 0.725, b: 0.486, a: 1}
