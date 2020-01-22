@@ -163,11 +163,11 @@ MonoBehaviour:
   targetColor: {r: 0.49803922, g: 0.7490196, b: 1, a: 1}
   pickColor: {r: 1, g: 0.8980392, b: 0.69803923, a: 1}
   rayColor: {r: 0.5, g: 0.75, b: 1, a: 1}
-  showRay: 1
+  showRay: 0
   resultPath: Assets/Results/result.txt
   pickRenderTexture: {fileID: 8400000, guid: bd99d30e88679e048b76b4f1ec65b153, type: 2}
   cursor2D: {fileID: 127409086}
-  is2DPicking: 1
+  is2DPicking: 0
 --- !u!4 &68155408
 Transform:
   m_ObjectHideFlags: 0
